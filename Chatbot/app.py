@@ -2,8 +2,6 @@ import streamlit as st
 from dotenv import load_dotenv
 import google.generativeai as genai
 import os
-# import pathlib
-# import textwrap
 from PIL import Image
 from gtts import gTTS
 import tempfile
@@ -26,6 +24,8 @@ image_model = genai.GenerativeModel('gemini-1.5-flash')
 # Initialize chat in session state if not already done
 if 'chat' not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
+    initial_prompt = "Your name is Atom. You are a chat assistant which is right now in initial state of development, currently version 1. You are created by Aniket Chaudhary."
+    st.session_state.chat.send_message(initial_prompt, stream=False)
 
 # Initialize response in session state if not already done
 if 'response' not in st.session_state:
@@ -73,10 +73,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-
-# Header with theme toggle switch
-# st.header("ATOM Chatbot v1")
-# st.subheader("Powered by Gemini LLM")
 switch_label = 'Dark Mode' if st.session_state['themebutton'] == 'light' else 'Light Mode'
 switch_value = st.session_state['themebutton'] == 'dark'
 
@@ -109,17 +105,25 @@ if submit and (input_text or image):
     st.session_state.submit_button = False
     
     # Convert the response to audio
-    tts = gTTS(st.session_state.response)
-    temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-    tts.save(temp_audio_file.name)
-    st.session_state.audio_file = temp_audio_file.name
+    try:
+        tts = gTTS(st.session_state.response)
+        temp_audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+        tts.save(temp_audio_file.name)
+        st.session_state.audio_file = temp_audio_file.name
+    except Exception as e:
+        st.error(f"An error occurred while generating the audio: {e}")
+        print(f"An error occurred while generating the audio: {e}")
 
 # Display the latest response with logo and play audio
 if st.session_state.response:
     st.image(image_path, width=50)
-    # st.image("Chatbot/chatbot_logo.png", width=50)
     st.write(st.session_state.response)
     if 'audio_file' in st.session_state:
-        audio_file = open(st.session_state.audio_file, 'rb')
-        audio_bytes = audio_file.read()
-        st.audio(audio_bytes, format='audio/mp3')
+        try:
+            with open(st.session_state.audio_file, 'rb') as audio_file:
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format='audio/mp3')
+        except FileNotFoundError:
+            st.error(f"Audio file {st.session_state.audio_file} not found.")
+        except Exception as e:
+            st.error(f"An error occurred while playing the audio: {e}")
