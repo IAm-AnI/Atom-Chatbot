@@ -14,6 +14,10 @@ st.set_page_config(page_title="Atom Chatbot v-1")
 # Load environment variables
 load_dotenv()
 
+# Load logo for chatbot response
+current_dir = os.path.dirname(os.path.abspath(__file__))
+image_path = os.path.join(current_dir, "chatbot_logo.png")
+
 # Configure Generative AI model
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 model = genai.GenerativeModel('gemini-pro')
@@ -112,7 +116,8 @@ if submit and (input_text or image):
 
 # Display the latest response with logo and play audio
 if st.session_state.response:
-    st.image("chatbot_logo.png", width=50)
+    st.image(image_path, width=50)
+    # st.image("Chatbot/chatbot_logo.png", width=50)
     st.write(st.session_state.response)
     if 'audio_file' in st.session_state:
         audio_file = open(st.session_state.audio_file, 'rb')
