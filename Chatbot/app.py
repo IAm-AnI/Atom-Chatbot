@@ -9,7 +9,7 @@ from gtts import gTTS
 import tempfile
 
 # Set the page configuration at the beginning
-st.set_page_config(page_title="Q&A Demo")
+st.set_page_config(page_title="Atom Chatbot v-1")
 
 # Load environment variables
 load_dotenv()
@@ -63,6 +63,9 @@ st.markdown("""
     <div style="display: flex; align-items: center;">
         <h2>ATOM Chatbot v1</h2>
         <p style="margin-top: auto;">Powered by Gemini LLM</p>
+    </div>
+    <div>
+        <p style="color: grey; font-size: 12px;">Created by Aniket Chaudhary</p>
     </div>
 """, unsafe_allow_html=True)
 
