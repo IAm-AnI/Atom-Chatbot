@@ -15,6 +15,7 @@ load_dotenv()
 # Load logo for chatbot response
 current_dir = os.path.dirname(os.path.abspath(__file__))
 image_path = os.path.join(current_dir, "chatbot_logo.png")
+html_file_path = os.path.join(current_dir, "index.html")
 
 # Configure Generative AI model
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
@@ -62,16 +63,13 @@ if 'themebutton' not in st.session_state:
     st.session_state['themebutton'] = 'light'
 set_theme(st.session_state['themebutton'])
 
-# Header with theme toggle switch
-st.markdown("""
-    <div style="display: flex; align-items: center;">
-        <h2>ATOM Chatbot v1</h2>
-        <p style="margin-top: auto;">Powered by Gemini LLM</p>
-    </div>
-    <div>
-        <p style="color: grey; font-size: 12px;">Created by Aniket Chaudhary</p>
-    </div>
-""", unsafe_allow_html=True)
+# Read HTML content from the file
+with open(html_file_path, "r") as file:
+    html_file = file.read()
+
+
+# Inject HTML content
+st.markdown(html_file, unsafe_allow_html=True)
 
 switch_label = 'Dark Mode' if st.session_state['themebutton'] == 'light' else 'Light Mode'
 switch_value = st.session_state['themebutton'] == 'dark'
@@ -86,8 +84,8 @@ if st.checkbox(switch_label, value=switch_value):
 def submit_input():
     st.session_state.submit_button = True
 
-input_text = st.text_input("Input: ", key="input", on_change=submit_input)
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+input_text = st.text_input("Input: ", key="input", on_change=submit_input)
 
 image = None
 if uploaded_file is not None:

@@ -1,0 +1,34 @@
+<style>
+    .header-container {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .header-container h2 {
+        display: flex;
+        align-items: end;
+    }
+    .header-container p {
+       margin-top: 12px;
+       display: flex;
+       align-items: end;
+    }
+    @media only screen and (max-width: 600px) {
+        .header-container {
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .header-container h2 {
+            margin-right: auto;
+        }
+        .header-container p {
+            margin-top: 0px;
+        }
+    }
+</style>
+<div class="header-container">
+    <h2>ATOM Chatbot v1</h2>
+    <p>Powered by Gemini LLM</p>
+</div>
+<div>
+    <p style="color: grey; font-size: 12px;">Created by Aniket Chaudhary</p>
+</div>
